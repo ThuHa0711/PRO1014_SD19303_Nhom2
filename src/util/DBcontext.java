@@ -11,7 +11,7 @@ public class DBcontext {
 
     public static String USER = "sa";
     public static String PASSWORD = "48691412ha";
-    public static String URL = "jdbc:sqlserver://localhost:1433;databaseName=QLBanAo;encrypt=true;trustServerCertificate=true;";
+    public static String URL = "jdbc:sqlserver://localhost:1433;databaseName=QLBAP;encrypt=true;trustServerCertificate=true;";
 
     static {
         try {

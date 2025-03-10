@@ -1,15 +1,15 @@
-﻿CREATE DATABASE QLBAP;
+﻿CREATE DATABASE QLBanAo;
 GO
-USE QLBAP;
+USE QLBanAo;
 GO
 
--- Tạo bảng ChucVu
+-- Create table ChucVu
 CREATE TABLE ChucVu (
     ID INT PRIMARY KEY IDENTITY,
     TenChucVu NVARCHAR(50)
 );
 
--- Tạo bảng NhanVien
+-- Create table NhanVien
 CREATE TABLE NhanVien (
     ID INT PRIMARY KEY IDENTITY,
     MaNhanVien VARCHAR(20),
@@ -26,7 +26,7 @@ CREATE TABLE NhanVien (
     FOREIGN KEY (ID_ChucVu) REFERENCES ChucVu(ID)
 );
 
--- Tạo bảng KhachHang
+-- Create table KhachHang
 CREATE TABLE KhachHang (
     ID INT PRIMARY KEY IDENTITY,
     MaKhachHang VARCHAR(50),
@@ -38,14 +38,24 @@ CREATE TABLE KhachHang (
     TrangThai BIT
 );
 
+-- Create table Voucher
+CREATE TABLE Voucher (
+    ID INT PRIMARY KEY IDENTITY,
+    MaVoucher VARCHAR(50),
+    GiaTri DECIMAL(10, 2),
+    NgayBatDau DATE,
+    NgayKetThuc DATE,
+    SoLuong INT,
+    MoTa NVARCHAR(50),
+    TrangThai BIT
+);
 
-
--- Tạo bảng HoaDon
+-- Create table HoaDon
 CREATE TABLE HoaDon (
     ID INT PRIMARY KEY IDENTITY,
     ID_NhanVien INT,
     ID_KhachHang INT,
-   
+    ID_Voucher INT,
     MaHoaDon VARCHAR(40),
     TongTien DECIMAL(18, 2),
     DiaChi NVARCHAR(40),
@@ -54,34 +64,34 @@ CREATE TABLE HoaDon (
     MoTa NVARCHAR(255),
     FOREIGN KEY (ID_NhanVien) REFERENCES NhanVien(ID),
     FOREIGN KEY (ID_KhachHang) REFERENCES KhachHang(ID),
-    
+    FOREIGN KEY (ID_Voucher) REFERENCES Voucher(ID)
 );
 
--- Tạo bảng KichCo
+-- Create table KichCo
 CREATE TABLE KichCo (
     ID INT PRIMARY KEY IDENTITY,
     TenKichCo NVARCHAR(50)
 );
 
--- Tạo bảng TheLoai
+-- Create table TheLoai
 CREATE TABLE TheLoai (
     ID INT PRIMARY KEY IDENTITY,
     TenTheLoai NVARCHAR(100)
 );
 
--- Tạo bảng MauSac
+-- Create table MauSac
 CREATE TABLE MauSac (
     ID INT PRIMARY KEY IDENTITY,
     TenMauSac NVARCHAR(100)
 );
 
--- Tạo bảng ChatLieu
+-- Create table ChatLieu
 CREATE TABLE ChatLieu (
     ID INT PRIMARY KEY IDENTITY,
     TenChatLieu NVARCHAR(100)
 );
 
--- Tạo bảng SanPhamChiTiet
+-- Create table SanPhamChiTiet
 CREATE TABLE SanPhamChiTiet (
     ID INT PRIMARY KEY IDENTITY,
     ID_TheLoai INT,
@@ -100,7 +110,7 @@ CREATE TABLE SanPhamChiTiet (
     FOREIGN KEY (ID_KichCo) REFERENCES KichCo(ID)
 );
 
--- Tạo bảng HoaDonChiTiet
+-- Create table HoaDonChiTiet
 CREATE TABLE HoaDonChiTiet (
     ID INT PRIMARY KEY IDENTITY,
     ID_SanPhamChiTiet INT,
@@ -124,6 +134,7 @@ INSERT INTO ChucVu (TenChucVu) VALUES
 (N'Kế toán'),
 (N'Bảo vệ');
 
+
 -- Thêm dữ liệu vào bảng NhanVien
 INSERT INTO NhanVien (MaNhanVien, HoTen, SDT, NgaySinh, GioiTinh, DiaChi, Anh, TrangThai, TaiKhoan, MatKhau, ID_ChucVu) VALUES
 ('NV001', N'Nguyễn Văn A', '0901234567', '1985-01-01', 1, N'Hà Nội', 'image1.jpg', N'Hoạt động', 'nguyenvana', 'matkhau1', 1),
@@ -146,21 +157,37 @@ INSERT INTO KhachHang (MaKhachHang, HoTen, SDT, DiaChi, NgaySinh, GioiTinh, Tran
 ('KH005', N'Hoàng Thị J', '0915678901', N'Cần Thơ', '1980-10-01', 0, 1),
 ('KH006', N'Nguyễn Văn K', '0916789012', N'Hải Phòng', '1985-11-01', 1, 1),
 ('KH007', N'Trần Thị L', '0917890123', N'Quảng Ninh', '1990-12-01', 0, 1),
-('KH008', N'Lê Văn M', '0918901234', N'Nam Định', '1995-01-01', 1, 1),
-('KH009', N'Phạm Thị N', '0919012345', N'Thái Bình', '2000-02-01', 0, 1),
-('KH010', N'Hoàng Văn O', '0920123456', N'Hưng Yên', '1980-03-01', 1, 1);
+('KH008', N'Lê Văn M', '0918901234', N'Thanh Hóa', '1995-01-01', 1, 1),
+('KH009', N'Phạm Thị N', '0919012345', N'Nghệ An', '2000-02-01', 0, 1),
+('KH010', N'Hoàng Văn O', '0910123456', N'Hà Tĩnh', '1980-03-01', 1, 1);
+
+INSERT INTO Voucher (MaVoucher, GiaTri, NgayBatDau, NgayKetThuc, SoLuong, MoTa, TrangThai) VALUES
+('VC001', 10.00, '2023-01-01', '2023-12-31', 100, N'Giảm giá 10%', 1),
+('VC002', 20.00, '2023-02-01', '2023-12-31', 200, N'Giảm giá 20%', 1),
+('VC003', 15.00, '2023-03-01', '2023-12-31', 150, N'Giảm giá 15%', 1),
+('VC004', 25.00, '2023-04-01', '2023-12-31', 250, N'Giảm giá 25%', 1),
+('VC005', 30.00, '2023-05-01', '2023-12-31', 300, N'Giảm giá 30%', 1),
+('VC006', 10.00, '2023-01-01', '2023-12-31', 100, N'Giảm giá 10%', 1),
+('VC007', 20.00, '2023-02-01', '2023-12-31', 200, N'Giảm giá 20%', 1),
+('VC008', 15.00, '2023-03-01', '2023-12-31', 150, N'Giảm giá 15%', 1),
+('VC009', 25.00, '2023-04-01', '2023-12-31', 250, N'Giảm giá 25%', 1),
+('VC0010', 30.00, '2023-05-01', '2023-12-31', 300, N'Giảm giá 30%', 1);
+
+-- Thêm dữ liệu vào bảng HoaDon
+INSERT INTO HoaDon (ID_NhanVien, ID_KhachHang, ID_Voucher, MaHoaDon, TongTien, NgayThanhToan, TrangThai, MoTa) VALUES
+(1, 1, 1, 'HD001', 1000000.00, '2023-01-01', 1, 'Ghi chú 1'),
+(2, 2, 2, 'HD002', 2000000.00, '2023-02-01', 1, 'Ghi chú 2'),
+(3, 3, 3, 'HD003', 3000000.00, '2023-03-01', 1, 'Ghi chú 3'),
+(4, 4, 4, 'HD004', 4000000.00, '2023-04-01', 1, 'Ghi chú 4'),
+(5, 5, 5, 'HD005', 5000000.00, '2023-05-01', 1, 'Ghi chú 5'),
+(6, 6, 6, 'HD006', 6000000.00, '2023-06-01', 1, 'Ghi chú 6'),
+(7, 7, 7, 'HD007', 7000000.00, '2023-07-01', 1, 'Ghi chú 7'),
+(8, 8, 8, 'HD008', 8000000.00, '2023-08-01', 1, 'Ghi chú 8'),
+(9, 9, 9, 'HD009', 9000000.00, '2023-09-01', 1, 'Ghi chú 9'),
+(10, 10, 10, 'HD010', 10000000.00, '2023-10-01', 1, 'Ghi chú 10');
 
 -- Thêm dữ liệu vào bảng Voucher
 
-
-
--- Thêm dữ liệu vào bảng HoaDon
-INSERT INTO HoaDon (ID_NhanVien, ID_KhachHang, MaHoaDon, TongTien, DiaChi, NgayThanhToan, TrangThai, MoTa) VALUES
-(1, 1, 'HD001', 1000.00, N'Hà Nội', '2023-07-25', 1, N'Hóa đơn thanh toán tại cửa hàng'),
-(2, 2, 'HD002', 2000.00, N'TP Hồ Chí Minh', '2023-07-25', 1, N'Hóa đơn thanh toán trực tuyến'),
-(3, 3, 'HD003', 1500.00, N'Đà Nẵng', '2023-07-26', 1, N'Hóa đơn thanh toán tại cửa hàng'),
-(4, 4, 'HD004', 3000.00, N'Huế', '2023-07-26', 0, N'Hóa đơn thanh toán trực tuyến'),
-(5, 5, 'HD005', 2500.00, N'Cần Thơ', '2023-07-27', 1, N'Hóa đơn thanh toán tại cửa hàng');
 
 -- Thêm dữ liệu vào bảng KichCo
 INSERT INTO KichCo (TenKichCo) VALUES
@@ -188,7 +215,6 @@ INSERT INTO MauSac (TenMauSac) VALUES
 -- Thêm dữ liệu vào bảng ChatLieu
 INSERT INTO ChatLieu (TenChatLieu) VALUES
 (N'Cotton'),
-(N'Jean'),
 (N'Polyester'),
 (N'Lụa'),
 (N'Len'),
@@ -204,8 +230,8 @@ INSERT INTO SanPhamChiTiet (ID_TheLoai, ID_ChatLieu, ID_MauSac, ID_KichCo, MaSP,
 
 -- Thêm dữ liệu vào bảng HoaDonChiTiet
 INSERT INTO HoaDonChiTiet (ID_SanPhamChiTiet, ID_HoaDon, SoLuong, DonGia) VALUES
-(1, 1, 1, 100.00),
-(2, 2, 2, 200.00),
-(3, 3, 3, 300.00),
-(4, 4, 4, 400.00),
-(5, 5, 5, 500.00);
+(1, 1, 2, 150000.00),
+(2, 2, 1, 200000.00),
+(3, 3, 3, 300000.00),
+(4, 4, 5, 50000.00),
+(5, 5, 1, 250000.00);
